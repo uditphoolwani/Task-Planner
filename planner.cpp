@@ -8,7 +8,7 @@ class Sprint;
 enum TaskType {STORY, FEATURE, BUG};
 enum TaskStatus {OPEN, IN_PROGRESS, RESOLVED, DELAYED, COMPLETED};
 
-
+// Sprint class 
 class Sprint
 {
     int begin,end;
@@ -24,15 +24,7 @@ class Sprint
      void eraseTask(int);
 };
 
-inline bool Sprint::operator==(Sprint sprint)
-{
-    return (this->begin==sprint.begin)&&(this->end==sprint.end)&&(this->name==sprint.name);
-}
-
-void Sprint::eraseTask(int ind){
-    tasks.erase(tasks.begin()+ind);
-}
-
+//User class
 class User{
     private:
     vector<Task> taskList;
@@ -48,6 +40,7 @@ class User{
     bool changeStatusTask(Task&,TaskStatus);
 };
 
+//Task Class
 class Task{
     int id;
     string subtract;
@@ -65,6 +58,18 @@ class Task{
     bool operator==(Task task);
 };
 
+
+//function definition for Sprint class
+inline bool Sprint::operator==(Sprint sprint)
+{
+    return (this->begin==sprint.begin)&&(this->end==sprint.end)&&(this->name==sprint.name);
+}
+
+void Sprint::eraseTask(int ind){
+    tasks.erase(tasks.begin()+ind);
+}
+
+//function definition for task class
 void Task::setTasktype(TaskType type){
     this->taskType=type;
 }
@@ -76,10 +81,6 @@ void Task::setUser(User user){
 void Task::setSubtract(const string &subtract){
     this->subtract=subtract;
 }
-
-// void Task::setUser(User user){
-//     this->user=user;
-// }
 
 void Task::setTaskStatus(TaskStatus taskStatus){
     this->taskStatus=taskStatus;
@@ -94,6 +95,7 @@ inline bool Task::operator==(Task task){
     return this->id==task.id;
 }
 
+//function definition for User class
 Task User::createTask(TaskType taskType){
     if(taskType==TaskType::STORY){
         cout<<"Warning! Task of type STORY is being created with no subtract"<<endl;
@@ -208,35 +210,38 @@ const vector<Task>& Sprint::getTasks() const{
 
 int main(){
     
+//declare users
+User user1, user2;
+
+//declare tasks
+Task task1 = user1.createTask(TaskType::FEATURE);
+Task task11 = user1.createTask(TaskType::BUG);
+Task task2 = user2.createTask(TaskType::BUG);
+Task task22 = user2.createTask("This is a subtract");
+
+//declare sprints
+Sprint sprint1 = user1.createSprint(22,33,"Sprint1");
+Sprint sprint2 = user2.createSprint(44,55,"Sprint2");
+
+//user actions
+cout << user1.changeStatusTask(task11, TaskStatus::IN_PROGRESS) <<endl ;
+cout << user1.addToSprint(sprint1, task1) << "\n"; //1
+cout << user1.addToSprint(sprint1, task11) << "\n"; //1
+cout << user1.addToSprint(sprint2, task1) << "\n"; //0
+cout << user1.removeFromSprint(sprint1, task11) << "\n"; //1
+cout << user2.addToSprint(sprint1, task1) << "\n"; //0
+cout << user2.removeFromSprint(sprint1, task2) << "\n"; //0
+cout << user2.addToSprint(sprint2, task1) << "\n"; //1
+cout << user2.addToSprint(sprint2, task2) << "\n"; //1
+
+sprint1.printDetails();
     
-    User user1, user2;
-	Task task1 = user1.createTask(TaskType::FEATURE);
-	Task task11 = user1.createTask(TaskType::BUG);
-	Task task2 = user2.createTask(TaskType::BUG);
-	Task task22 = user2.createTask("This is a subtract");
-
-	Sprint sprint1 = user1.createSprint(22,33,"Sprint1");
-	Sprint sprint2 = user2.createSprint(44,55,"Sprint2");
-
-	cout << user1.changeStatusTask(task11, TaskStatus::IN_PROGRESS) <<endl ;//1
-
-	cout << user1.addToSprint(sprint1, task1) << "\n"; //1
-	cout << user1.addToSprint(sprint1, task11) << "\n"; //1
-	cout << user1.addToSprint(sprint2, task1) << "\n"; //0
-	cout << user1.removeFromSprint(sprint1, task11) << "\n"; //1
-	cout << user2.addToSprint(sprint1, task1) << "\n"; //0
-	cout << user2.removeFromSprint(sprint1, task2) << "\n"; //0
-	cout << user2.addToSprint(sprint2, task1) << "\n"; //1
-	cout << user2.addToSprint(sprint2, task2) << "\n"; //1
-
-	sprint1.printDetails();
+sprint2.printDetails();
     
-    sprint2.printDetails();
-    
-	cout << endl;
-	user1.printAllTasks();
-	user2.printAllTasks();
-	return 0;
+cout << endl;
+user1.printAllTasks();
+user2.printAllTasks();
+return 0;
     
 }
 
